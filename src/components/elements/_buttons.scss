@@ -1,0 +1,41 @@
+$frog-btn-size: 30px;
+.frog-btn {
+    width: $frog-btn-size;
+    height: $frog-btn-size;
+    border-radius: $frog-btn-size / 2;
+    cursor: pointer;
+    &.alert {
+        background: $red url("../images/icon-alert.svg") no-repeat right center;
+        min-width: $frog-btn-size;
+        width: auto;
+        label {
+            display: block;
+            margin-right: $frog-btn-size;
+            padding: 1px 0 0 12px;
+            line-height: $frog-btn-size;
+            font-size: 12px;
+            font-weight: bold;
+            color: $white;
+            font-family: $sans;
+            text-align: center;
+        }
+    }
+    &.search {
+        background: $black url("../images/icon-search.svg") no-repeat;
+    }
+    &.location {
+        background: $black url("../images/icon-location.svg") no-repeat;
+    }
+    &.settings {
+        background: $black url("../images/icon-settings.svg") no-repeat;
+    }
+    &.chat {
+        background: $black url("../images/icon-chat.svg") no-repeat;
+    }
+    &:hover {
+        background-color: $navy;
+    }
+    &:active {
+        background-color: $blue;
+    }
+}

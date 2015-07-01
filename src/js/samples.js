@@ -1,0 +1,1 @@
+var FROG_SAMPLE = FROG_SAMPLE || {};

@@ -1,0 +1,168 @@
+/**
+ * Grid Setup
+ * Modified from http://matthewsimo.github.io/scss-flex-grid/
+ */
+$ps-columns: 12 !default;
+$ps-gutter: 0.5rem !default;
+
+/**
+ * Break point namespace object
+ *
+ * Set the default namespace object with these defaults with the
+ * understanding that you can pass in whatever you might require for your site.
+ *
+ * $ps-breakpoints is a Sass list with nested lists inside. Each sub list defines two things.
+ * 1. The namespace for that breakpoint. (Required) (i.e. xs, sm, md, lg)
+ * 2. The min-width measurement for the breakpoint for that namespace. (i.e. 48em, 62em, 75em)
+ * 3. The gutter-width measurement for the breakpoint for that namespace.
+ *
+ * Note: These should be in the proper order (at least till libsass handles map keys properly).
+ *
+ */
+$lg-width: 1440px;
+$md-width: 1020px;
+$sm-width: 768px;
+$xs-width: 430px;
+$mobile-gutter: 8px;
+$desktop-gutter: 20px;
+$ps-breakpoints: ( (xs, $mobile-gutter), (sm, $sm-width, $desktop-gutter), (md, $md-width, $desktop-gutter), (lg, $lg-width, $desktop-gutter) ) !default;
+
+/**
+ * Calculate column size percentage
+ */
+@function get-col-percent($column-num) {
+    @return $column-num / $ps-columns * 100%;
+}
+
+/**
+ * Spacing mixin to create uniform margin/padding
+ */
+@mixin spacing( $value, $type: margin, $orientation: vertical ) {
+    @if $orientation == vertical {
+        #{ $type }-top: $value;
+        #{ $type }-bottom: $value;
+    }
+    @else {
+        #{ $type }-left: $value;
+        #{ $type }-right: $value;
+    }
+}
+
+/**
+ * Row wrapper class, flex box parent.
+ */
+.row {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex-grow: 0;
+    flex-shrink: 1;
+    flex-basis: auto;
+}
+%col {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+%col-flex {
+    @extend %col;
+    flex-grow: 1;
+    flex-basis: auto;
+    max-width: 100%;
+}
+
+/**
+ * Generate a set of grid column classes using a namespace
+ */
+@mixin grid-sizes( $namespace, $gutter ) {
+    .col {
+        @include spacing( ( $gutter / 2), padding, horizontal );
+    }
+    .row {
+        @include spacing( ( -$gutter / 2 ), margin, horizontal );
+    }
+    .start-#{$namespace} {
+        justify-content: flex-start;
+        text-align: start;
+    }
+    .center-#{$namespace} {
+        justify-content: center;
+        text-align: center;
+    }
+    .end-#{$namespace} {
+        justify-content: flex-end;
+        text-align: end;
+    }
+    .top-#{$namespace} {
+        align-items: flex-start;
+    }
+    .middle-#{$namespace} {
+        align-items: center;
+    }
+    .bottom-#{$namespace} {
+        align-items: flex-end;
+    }
+    .around-#{$namespace} {
+        justify-content: space-around;
+    }
+    .between-#{$namespace} {
+        justify-content: space-between;
+    }
+    .first-#{$namespace} {
+        order: -1;
+    }
+    .last-#{$namespace} {
+        order: 1;
+    }
+    .#{$namespace}-hide {
+        display: none;
+    }
+    @for $i from 1 through $ps-columns {
+        .#{$namespace}-#{$i} {
+            @extend %col;
+            display: flex;
+            flex-basis: get-col-percent($i);
+            max-width: get-col-percent($i);
+        }
+        @if ( $i != $ps-columns ) {
+            .off-#{$namespace}-#{$i} {
+                margin-left: get-col-percent($i);
+            }
+        }
+    }
+}
+
+/**
+ * Build Grid
+ */
+@each $val in $ps-breakpoints {
+    $namespace: nth($val, 1);
+    $gutter: $ps-gutter;
+    .#{$namespace} {
+        @extend %col-flex;
+    }
+    .container {
+        overflow-x: hidden;
+    }
+    .row.reverse {
+        flex-direction: row-reverse;
+    }
+    .col.reverse {
+        flex-direction: column-reverse;
+    }
+    @if length($val) == 1 {
+        @include grid-sizes( $namespace, $gutter );
+    }
+    @else {
+        $size: nth($val, 2);
+        @if length($val) == 3 {
+            $gutter: nth($val, 3);
+        }
+        @media only screen and (min-width: #{$size}) {
+            @include grid-sizes( $namespace, $gutter );
+        }
+    }
+}

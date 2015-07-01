@@ -1,0 +1,31 @@
+.box {
+    box-sizing: border-box;
+    min-height: 2rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    text-align: center;
+    color: white;
+    background-color: #000;
+}
+.box .box {
+    background-color: #666;
+    padding: 1rem;
+    margin-bottom: 0;
+}
+.box .box .box {
+    background-color: #aaa;
+    padding: 1rem 0;
+}
+.box.large {
+    min-height: 6rem;
+}
+.box.container {
+    padding: 0.5rem;
+}
+.responsive-debug {
+    margin: 0 20px;
+}
+.page-section {
+    margin-bottom: 100px;
+}
